@@ -64,8 +64,8 @@ class Dataset():
             self.input_output_shape = (input_shape, (size, size))
             self.dataset_size = 202599
 
-        elif len(dataset_name.split()) == 2:
-                    # get train data and perform a train-validation-test split
+        elif len(dataset_name.split()) >= 2:
+            # get train data and perform a train-validation-test split
             train_split = 0.8
             val_split = 0.1
             samples, interval = generate_2d_data(dataset_name, batch_size=data_size)

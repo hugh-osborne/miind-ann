@@ -30,8 +30,6 @@ tf.random.set_seed(1234)
 
 os.environ["TF_FORCE_GPU_ALLOW_GROWTH"] = "true"
 
-timesteps = int(sys.argv[1])
-
 
 # ## 1. Load Data
 # First, load the data you want to train the normalizing flow on. Available datasets are various toy data distributions, the datasets POWER, GAS, and MINIBOONE from the UCI machine learning repository, MNIST, and CelebA. This example is on the 2D toy dataset "tum". Note that for 2D toy data the train data is returned already in batches, while the validation and test data is returned unbatched.
@@ -42,8 +40,13 @@ timesteps = int(sys.argv[1])
 dataset_size = 10000  # ony necessary for toy data distributions
 batch_size = 8000
 
-dataset_name = 'fn ' + str(timesteps)
-
+# custom_gaussian  <x>  <y>  <var_x>  <var_y>
+x = -1.0
+y = 0.2
+var_x = 0.05
+var_y = 0.05
+dataset_name = 'custom_gaussian ' + str(x) + ' ' + str(y) + ' ' + str(var_x) + ' ' + str(var_y)
+checkpoint_name =  'custom_gaussian_' + str(x) + '_' + str(y) + '_' + str(var_x) + '_' + str(var_y)
 
 # In[3]:
 
@@ -161,7 +164,7 @@ train_time = time.time() - t_start
 # load best model with min validation loss
 checkpoint.read(checkpoint_prefix)
 checkpoint_model_only = tf.train.Checkpoint(model=maf)
-checkpoint_model_only.write('checkpoint' + str(timesteps))
+checkpoint_model_only.write(checkpoint_name)
 
 filelist = [f for f in os.listdir(checkpoint_directory)]
 for f in filelist:

@@ -40,15 +40,18 @@ def generate_2d_data(data, rng=None, batch_size=1000):
     if rng is None:
         rng = np.random.RandomState()
 
-    if len(data.split()) == 2:
-        assert(data.split()[0] == "fn")
-        gauss = np.random.multivariate_normal((-1.0, 0.2), [(0.05,0.0),(0.0,0.05)], batch_size)
-        for i in range(int(data.split()[1])):
-            for g in range(gauss.shape[0]):
-                pair = fn(gauss[g], 0.1)
-                gauss[g][0] = gauss[g][0] + 0.1 * pair[0]
-                gauss[g][1] = gauss[g][1] + 0.1 * pair[1]
-        return gauss, np.max(gauss)
+    if len(data.split()) >= 2:
+        if data.split()[0] == 'fn':
+            gauss = np.random.multivariate_normal((0.0, 0.0), [(2.0,0.0),(0.0,2.0)], batch_size)
+            for i in range(int(data.split()[1])):
+                for g in range(gauss.shape[0]):
+                    pair = fn(gauss[g], 0.1)
+                    gauss[g][0] = gauss[g][0] + 0.1 * pair[0]
+                    gauss[g][1] = gauss[g][1] + 0.1 * pair[1]
+            return gauss, np.max(gauss)
+        if data.split()[0] == 'custom_gaussian':
+            gauss = np.random.multivariate_normal((float(data.split()[1]), float(data.split()[2])), [(float(data.split()[3]),0.0),(0.0,float(data.split()[4]))], batch_size)
+            return gauss, np.max(gauss)
 
     if data == "swissroll":
         data = sklearn.datasets.make_swiss_roll(n_samples=batch_size, noise=1.0)[0]
